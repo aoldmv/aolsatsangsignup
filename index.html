@@ -7,89 +7,86 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --saffron: #E8A045;
-  --saffron-light: #FDF3E3;
-  --saffron-mid: #F5C878;
-  --rose: #C0566B;
-  --cream: #FAF6EF;
-  --cream-dark: #F0E8D8;
-  --earth: #7A5C3A;
-  --earth-light: #A07850;
-  --earth-dark: #4A3520;
-  --sage: #6B8C6B;
-  --sage-light: #E8F0E8;
-  --ink: #2C1F0E;
-  --ink-mid: #5A4030;
-  --muted: #8C7060;
-  --white: #FFFDF9;
-  --warm-blue: #4A74A8;
-  --warm-blue-light: #B8CCE8;
-  --warm-blue-dark: #1A3A5C;
-  --border: rgba(122,92,58,0.18);
-  --border-strong: rgba(122,92,58,0.32);
-  --shadow: 0 2px 20px rgba(44,31,14,0.09);
+--saffron: #E8A045;
+--saffron-light: #FDF3E3;
+--saffron-mid: #F5C878;
+--rose: #C0566B;
+--cream: #FAF6EF;
+--cream-dark: #F0E8D8;
+--earth: #7A5C3A;
+--earth-light: #A07850;
+--earth-dark: #4A3520;
+--sage: #6B8C6B;
+--sage-light: #E8F0E8;
+--ink: #2C1F0E;
+--ink-mid: #5A4030;
+--muted: #8C7060;
+--white: #FFFDF9;
+--warm-blue: #4A74A8;
+--warm-blue-light: #B8CCE8;
+--warm-blue-dark: #1A3A5C;
+--border: rgba(122,92,58,0.18);
+--border-strong: rgba(122,92,58,0.32);
+--shadow: 0 2px 20px rgba(44,31,14,0.09);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; font-weight: 300; }
 body::before {
-  content: ''; position: fixed; inset: 0;
-  background: radial-gradient(circle at 10% 20%, rgba(232,160,69,0.07) 0%, transparent 50%),
-              radial-gradient(circle at 90% 80%, rgba(192,86,107,0.05) 0%, transparent 50%);
-  pointer-events: none; z-index: 0;
+content: ''; position: fixed; inset: 0;
+background: radial-gradient(circle at 10% 20%, rgba(232,160,69,0.07) 0%, transparent 50%),
+radial-gradient(circle at 90% 80%, rgba(192,86,107,0.05) 0%, transparent 50%);
+pointer-events: none; z-index: 0;
 }
 .site-header {
-  background: var(--earth-dark); text-align: center;
-  padding: 1.75rem 1rem 1.4rem; position: relative; overflow: hidden;
+background: var(--earth-dark); text-align: center;
+padding: 1.75rem 1rem 1.4rem; position: relative; overflow: hidden;
 }
 .site-header::after {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-  height: 3px; background: linear-gradient(90deg, var(--saffron), var(--rose), var(--saffron));
+content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+height: 3px; background: linear-gradient(90deg, var(--saffron), var(--rose), var(--saffron));
 }
 .site-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 400; letter-spacing: 0.04em; color: var(--white);}
 .site-header p { font-size: 0.77rem; color: var(--saffron-mid); letter-spacing: 0.13em; text-transform: uppercase; margin-top: 0.3rem; }
 .main { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 3rem; position: relative; z-index: 1; }
 .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 1.4rem; margin-bottom: 1.1rem; box-shadow: var(--shadow); }
-
 /* ── AVAILABILITY OVERLAY ── */
 .cal-wrap { position: relative; }
 .avail-overlay {
-  position: absolute; inset: 0; background: rgba(250,246,239,0.82);
-  backdrop-filter: blur(2px); border-radius: 10px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; z-index: 10; transition: opacity 0.4s ease;
+position: absolute; inset: 0; background: rgba(250,246,239,0.82);
+backdrop-filter: blur(2px); border-radius: 10px;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+gap: 10px; z-index: 10; transition: opacity 0.4s ease;
 }
 .avail-overlay.hidden { opacity: 0; pointer-events: none; }
 .avail-spinner { width: 28px; height: 28px; border: 3px solid var(--cream-dark); border-top-color: var(--saffron); border-radius: 50%; animation: spin 0.75s linear infinite; }
 .avail-overlay-text { font-size: 0.82rem; color: var(--earth-dark); font-weight: 500; letter-spacing: 0.04em; text-align: center; }
 .avail-overlay-sub { font-size: 0.72rem; color: var(--muted); font-weight: 300; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
 /* ── LOCKED MONTH BANNER ── */
 .locked-banner {
-  display: none;
-  background: var(--cream-dark);
-  border: 1px solid var(--border-strong);
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.85rem;
-  text-align: center;
+display: none;
+background: var(--cream-dark);
+border: 1px solid var(--border-strong);
+border-radius: 10px;
+padding: 0.75rem 1rem;
+margin-bottom: 0.85rem;
+text-align: center;
 }
 .locked-banner-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--earth-dark);
-  letter-spacing: 0.02em;
-  margin-bottom: 0.2rem;
+font-family: 'Cormorant Garamond', serif;
+font-size: 1rem;
+font-weight: 500;
+color: var(--earth-dark);
+letter-spacing: 0.02em;
+margin-bottom: 0.2rem;
 }
 .locked-banner-sub {
-  font-size: 0.75rem;
-  color: var(--muted);
-  font-weight: 300;
-  letter-spacing: 0.03em;
+font-size: 0.75rem;
+color: var(--muted);
+font-weight: 300;
+letter-spacing: 0.03em;
 }
 .locked-banner.visible { display: block; }
-
 /* ── CALENDAR ── */
 .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; }
 .cal-month { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 500; color: var(--earth-dark); }
@@ -101,10 +98,10 @@ body::before {
 .day-label.wknd { color: var(--saffron); }
 .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
 .cal-cell {
-  aspect-ratio: 1; display: flex; flex-direction: column; align-items: center;
-  justify-content: center; border-radius: 8px; font-size: 0.8rem;
-  font-weight: 300; color: var(--muted); cursor: default;
-  transition: all 0.15s; position: relative; overflow: hidden; gap: 1px;
+aspect-ratio: 1; display: flex; flex-direction: column; align-items: center;
+justify-content: center; border-radius: 8px; font-size: 0.8rem;
+font-weight: 300; color: var(--muted); cursor: default;
+transition: all 0.15s; position: relative; overflow: hidden; gap: 1px;
 }
 .cal-cell.available { border: 1px solid #C8923A; color: #5A3A0A; cursor: pointer; background: #F5DFA8; font-weight: 400; }
 .cal-cell.available:hover { background: #F0CE80; border-color: #A87030; color: #3A2008; }
@@ -115,35 +112,31 @@ body::before {
 .cal-cell.event { background: #B8CCE8; border: 1.5px solid #4A74A8; color: #1A3A5C; cursor: not-allowed; font-weight: 400; }
 .cal-num { font-size: 0.8rem; line-height: 1; }
 .cal-label {
-  font-family: 'Jost', sans-serif;
-  font-size: 8px;
-  font-weight: 500;
-  letter-spacing: 0em;
-  text-align: center;
-  line-height: 1.1;
-  max-width: 100%;
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0 2px;
-  color: #1A3A5C;
-  word-break: break-word;
+font-family: 'Jost', sans-serif;
+font-size: 8px;
+font-weight: 500;
+letter-spacing: 0em;
+text-align: center;
+line-height: 1.1;
+max-width: 100%;
+white-space: normal;
+overflow: hidden;
+text-overflow: ellipsis;
+padding: 0 2px;
+color: #1A3A5C;
+word-break: break-word;
 }
-
 /* ── LEGEND ── */
 .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 0.85rem; }
 .leg-item { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: var(--muted); }
 .leg-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
-
 /* ── TIME SLOTS ── */
 .time-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; margin: 0.85rem 0; }
 .tslot { padding: 9px 4px; text-align: center; border: 1px solid var(--border-strong); border-radius: 8px; font-size: 0.8rem; cursor: pointer; color: var(--ink); background: var(--cream); transition: all 0.15s; font-family: 'Jost', sans-serif; }
 .tslot:hover { background: var(--saffron-light); border-color: var(--saffron); color: var(--earth-dark); }
 .tslot.picked { background: var(--earth-dark); color: var(--saffron-mid); border-color: var(--earth-dark); font-weight: 500; }
-
 /* ── SELECTED BADGE ── */
 .sel-badge { display: inline-flex; align-items: center; gap: 7px; background: var(--saffron-light); color: var(--earth-dark); border: 1px solid var(--saffron); border-radius: 8px; padding: 6px 14px; font-size: 0.82rem; font-weight: 500; margin-bottom: 1rem; }
-
 /* ── FORMS ── */
 label.field-label { display: block; font-size: 0.71rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
 input[type=text], input[type=email], input[type=tel] { width: 100%; padding: 0.6rem 0.85rem; border: 1px solid var(--border-strong); border-radius: 8px; font-family: 'Jost', sans-serif; font-size: 0.88rem; font-weight: 300; background: var(--cream); color: var(--ink); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
@@ -164,149 +157,146 @@ input:focus { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(232,160,6
 .wa-btn { display: inline-flex; align-items: center; gap: 8px; padding: 0.65rem 1.4rem; background: #25D366; color: #fff; border-radius: 8px; font-size: 0.82rem; font-weight: 500; cursor: pointer; border: none; margin-top: 0.85rem; font-family: 'Jost', sans-serif; letter-spacing: 0.04em; }
 .wa-btn:hover { background: #1fb85a; }
 @media (max-width: 500px) {
-  .form-row { grid-template-columns: 1fr; }
-  .time-grid { grid-template-columns: repeat(3,1fr); }
-  .site-header h1 { font-size: 1.5rem; }
-  .cal-label { font-size: 7px; }
+.form-row { grid-template-columns: 1fr; }
+.time-grid { grid-template-columns: repeat(3,1fr); }
+.site-header h1 { font-size: 1.5rem; }
+.cal-label { font-size: 7px; }
 }
 </style>
 </head>
 <body>
-
 <header class="site-header">
- <h1>AOL Satsang Signup</h1>
-  <p>Art of Living · Washington DC · Maryland · Virginia</p>
+<h1>AOL Satsang Signup</h1>
+<p>Art of Living · Washington DC · Maryland · Virginia</p>
 </header>
-  <div style="background: #3A2510; padding: 0.5rem 1.2rem; display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; align-items: center;">
-  <div style="display: flex; align-items: center; gap: 6px;">
-    <div style="width: 11px; height: 11px; border-radius: 3px; background: #F5DFA8; border: 1px solid #C8923A; flex-shrink: 0;"></div>
-    <span style="font-size: 0.72rem; color: #F5C878;">Available</span>
-  </div>
-  <div style="display: flex; align-items: center; gap: 6px;">
-    <div style="width: 11px; height: 11px; border-radius: 3px; background: #C8603A; flex-shrink: 0;"></div>
-    <span style="font-size: 0.72rem; color: #F5C878;">Reserved</span>
-  </div>
-  <div style="display: flex; align-items: center; gap: 6px;">
-    <div style="width: 11px; height: 11px; border-radius: 3px; background: #B8CCE8; border: 1.5px solid #4A74A8; flex-shrink: 0;"></div>
-    <span style="font-size: 0.72rem; color: #F5C878;">Featured</span>
-  </div>
+
+<div style="background: #3A2510; padding: 0.5rem 1.2rem; display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; align-items: center;">
+<div style="display: flex; align-items: center; gap: 6px;">
+<div style="width: 11px; height: 11px; border-radius: 3px; background: #F5DFA8; border: 1px solid #C8923A; flex-shrink: 0;"></div>
+<span style="font-size: 0.72rem; color: #F5C878;">Available</span>
+</div>
+<div style="display: flex; align-items: center; gap: 6px;">
+<div style="width: 11px; height: 11px; border-radius: 3px; background: #C8603A; flex-shrink: 0;"></div>
+<span style="font-size: 0.72rem; color: #F5C878;">Reserved</span>
+</div>
+<div style="display: flex; align-items: center; gap: 6px;">
+<div style="width: 11px; height: 11px; border-radius: 3px; background: #B8CCE8; border: 1.5px solid #4A74A8; flex-shrink: 0;"></div>
+<span style="font-size: 0.72rem; color: #F5C878;">Featured</span>
+</div>
 </div>
 
 <main class="main">
-
-  <div class="card" id="cal-card">
-    <div id="cal-status-msg" style="text-align:center;margin-bottom:0.4rem;font-size:0.78rem;color:#7A5C3A;font-weight:500;letter-spacing:0.04em;display:none;"></div>
-    <div class="card-title" id="cal-subtitle" style="font-size:0.95rem;color:var(--earth-light);font-family:'Jost',sans-serif;font-weight:400;display:none;">
-      Please select your preferred date, fill in the details and submit
-    </div>
-    <div class="cal-nav">
-      <button class="cal-nav-btn" id="cal-prev" onclick="calNav(-1)">‹</button>
-      <span class="cal-month" id="cal-month-label"></span>
-      <button class="cal-nav-btn" id="cal-next" onclick="calNav(1)">›</button>
-    </div>
-    <div class="locked-banner" id="locked-banner">
-      <div class="locked-banner-title">Signups for this month will be opening soon.</div>
-      <div class="locked-banner-sub">Please check back shortly or select next month if available.</div>
-    </div>
-    <div class="cal-wrap">
-      <div class="day-labels">
-        <div class="day-label">Mo</div><div class="day-label">Tu</div>
-        <div class="day-label">We</div><div class="day-label">Th</div>
-        <div class="day-label wknd">Fr</div><div class="day-label wknd">Sa</div>
-        <div class="day-label wknd">Su</div>
-      </div>
-      <div class="cal-grid" id="cal-grid"></div>
-      <div class="avail-overlay" id="avail-overlay">
-        <div class="avail-spinner"></div>
-        <div class="avail-overlay-text">Checking available dates…</div>
-        <div class="avail-overlay-sub">Please wait a moment</div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="card" id="form-card" style="display:none;">
-    <div class="card-title"><span>✍️</span> Your Details</div>
-    <div class="sel-badge">🗓 <span id="sel-date-text"></span></div>
-    <div class="error-banner" id="error-banner">
-      Sorry, this date was just booked by someone else. Please choose another date.
-    </div>
-    <p style="font-size:0.76rem;color:var(--muted);margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:0.08em;">Choose a time</p>
-    <div class="time-grid" id="time-grid"></div>
-    <div class="lotus-divider">· · ·</div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="field-label" for="f-name">Full name *</label>
-        <input type="text" id="f-name" oninput="chkBook()">
-      </div>
-      <div class="form-group">
-        <label class="field-label" for="f-phone">Phone number *</label>
-        <input type="tel" id="f-phone" oninput="chkBook()">
-      </div>
-    </div>
-    <div class="form-row full">
-      <div class="form-group">
-        <label class="field-label" for="f-email">Email *</label>
-        <input type="email" id="f-email" oninput="chkBook()">
-      </div>
-    </div>
-    <div class="form-row full">
-      <div class="form-group">
-        <label class="field-label" for="f-area">Location *</label>
-        <input type="text" id="f-area" oninput="chkBook()">
-      </div>
-    </div>
-    <div class="form-row full">
-      <div class="form-group">
-        <label class="field-label" for="f-notes">Notes</label>
-        <input type="text" id="f-notes">
-      </div>
-    </div>
-    <button class="btn-primary" id="book-btn" onclick="submitBook()" disabled>
-      Satsang Signup
-    </button>
-  </div>
-
-  <div class="success-card" id="success-card">
-    <div style="font-size:2.2rem;margin-bottom:0.5rem;">🪷</div>
-    <h2>Jai Gurudev!</h2>
-    <p id="success-text"></p>
-    <button class="wa-btn" onclick="shareWA()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-      Share with friends via WhatsApp
-    </button>
-  </div>
-
-  <div style="text-align:center; padding: 1.5rem 0 2rem;">
-  <img src="aol_logo.png" alt="Art of Living" style="height: 45px; opacity: 0.85;">
+<div class="card" id="cal-card">
+<div id="cal-status-msg" style="text-align:center;margin-bottom:0.4rem;font-size:0.78rem;color:#7A5C3A;font-weight:500;letter-spacing:0.04em;display:none;"></div>
+<div class="card-title" id="cal-subtitle" style="font-size:0.95rem;color:var(--earth-light);font-family:'Jost',sans-serif;font-weight:400;display:none;">
+Please select your preferred date, fill in the details and submit
+</div>
+<div class="cal-nav">
+<button class="cal-nav-btn" id="cal-prev" onclick="calNav(-1)">&#8249;</button>
+<span class="cal-month" id="cal-month-label"></span>
+<button class="cal-nav-btn" id="cal-next" onclick="calNav(1)">&#8250;</button>
+</div>
+<div class="locked-banner" id="locked-banner">
+<div class="locked-banner-title">Signups for this month will be opening soon.</div>
+<div class="locked-banner-sub">Please check back shortly or select next month if available.</div>
+</div>
+<div class="cal-wrap">
+<div class="day-labels">
+<div class="day-label">Mo</div><div class="day-label">Tu</div>
+<div class="day-label">We</div><div class="day-label">Th</div>
+<div class="day-label wknd">Fr</div><div class="day-label wknd">Sa</div>
+<div class="day-label wknd">Su</div>
+</div>
+<div class="cal-grid" id="cal-grid"></div>
+<div class="avail-overlay" id="avail-overlay">
+<div class="avail-spinner"></div>
+<div class="avail-overlay-text">Checking available dates…</div>
+<div class="avail-overlay-sub">Please wait a moment</div>
+</div>
+</div>
 </div>
 
+<div class="card" id="form-card" style="display:none;">
+<div class="card-title"><span>&#9997;&#65039;</span> Your Details</div>
+<div class="sel-badge">&#128197; <span id="sel-date-text"></span></div>
+<div class="error-banner" id="error-banner">
+Sorry, this date was just booked by someone else. Please choose another date.
+</div>
+<p style="font-size:0.76rem;color:var(--muted);margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:0.08em;">Choose a time</p>
+<div class="time-grid" id="time-grid"></div>
+<div class="lotus-divider">· · ·</div>
+<div class="form-row">
+<div class="form-group">
+<label class="field-label" for="f-name">Full name *</label>
+<input type="text" id="f-name" oninput="chkBook()">
+</div>
+<div class="form-group">
+<label class="field-label" for="f-phone">Phone number *</label>
+<input type="tel" id="f-phone" oninput="chkBook()">
+</div>
+</div>
+<div class="form-row full">
+<div class="form-group">
+<label class="field-label" for="f-email">Email *</label>
+<input type="email" id="f-email" oninput="chkBook()">
+</div>
+</div>
+<div class="form-row full">
+<div class="form-group">
+<label class="field-label" for="f-area">Location *</label>
+<input type="text" id="f-area" oninput="chkBook()">
+</div>
+</div>
+<div class="form-row full">
+<div class="form-group">
+<label class="field-label" for="f-notes">Notes</label>
+<input type="text" id="f-notes">
+</div>
+</div>
+<button class="btn-primary" id="book-btn" onclick="submitBook()" disabled>
+Satsang Signup
+</button>
+</div>
+
+<div class="success-card" id="success-card">
+<div style="font-size:2.2rem;margin-bottom:0.5rem;">&#127799;</div>
+<h2>Jai Gurudev!</h2>
+<p id="success-text"></p>
+<button class="wa-btn" onclick="shareWA()">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+Share with friends via WhatsApp
+</button>
+</div>
+
+<div style="text-align:center; padding: 1.5rem 0 2rem;">
+<img src="aol_logo.png" alt="Art of Living" style="height: 45px; opacity: 0.85;">
+</div>
 </main>
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxTvzKyWHC6bU_LgNBiFk6KL4_n2vstDHu8Jwsqfqm24D1VqXIcn-P61THFFHQ3V7bPcg/exec';
-const TIMES     = ['4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM'];
-const MONTHS    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const TIMES = ['4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 // ── 3-MONTH WINDOW ──────────────────────────────────────────────
-const TODAY     = new Date(); TODAY.setHours(0,0,0,0);
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
 const MIN_MONTH = TODAY.getMonth();
-const MIN_YEAR  = TODAY.getFullYear();
-const MAX_DATE  = new Date(MIN_YEAR, MIN_MONTH + 2, 1);
+const MIN_YEAR = TODAY.getFullYear();
+const MAX_DATE = new Date(MIN_YEAR, MIN_MONTH + 2, 1);
 const MAX_MONTH = MAX_DATE.getMonth();
-const MAX_YEAR  = MAX_DATE.getFullYear();
+const MAX_YEAR = MAX_DATE.getFullYear();
 
 // ── STATE ───────────────────────────────────────────────────────
-let bookedKeys  = new Set();
+let bookedKeys = new Set();
 let bookedWeeks = new Set();
 let scheduleMap = {};
 let lockedMonths = new Set();
-let selDate     = null;
-let selTime     = null;
-let viewYear    = MIN_YEAR;
-let viewMonth   = MIN_MONTH;
+let selDate = null;
+let selTime = null;
+let viewYear = MIN_YEAR;
+let viewMonth = MIN_MONTH;
 let lastBooking = {};
 
 // ── DATE HELPERS ─────────────────────────────────────────────────
@@ -359,10 +349,10 @@ function init() {
 
 async function fetchData() {
   try {
-    const res  = await fetch(SHEET_URL + '?action=getData');
+    const res = await fetch(SHEET_URL + '?action=getData');
     const json = await res.json();
 
-    bookedKeys  = new Set();
+    bookedKeys = new Set();
     bookedWeeks = new Set();
     (json.booked || []).forEach(function(val) {
       var d = toDate(val);
@@ -373,18 +363,28 @@ async function fetchData() {
 
     scheduleMap = {};
     lockedMonths = new Set();
+
     (json.schedule || []).forEach(function(row) {
       var d = toDate(row.date);
       if (!d) return;
       var label = String(row.label || '').trim();
+
       if (label.toLowerCase() === 'locked') {
         // Lock the entire month — use YYYY-MM format as key
         var monthKey = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
         lockedMonths.add(monthKey);
         return; // Do not add to scheduleMap at all
       }
+
+      // ── NEW: 'open' label forces this specific date to be available
+      //    even if another day in the same weekend is already booked.
+      if (label.toLowerCase() === 'open') {
+        scheduleMap[dateKey(d)] = { type: 'open', label: '' };
+        return;
+      }
+
       scheduleMap[dateKey(d)] = {
-        type:  label.toLowerCase() === 'inactive' ? 'inactive' : (label ? 'event' : 'inactive'),
+        type: label.toLowerCase() === 'inactive' ? 'inactive' : (label ? 'event' : 'inactive'),
         label: label.toLowerCase() === 'inactive' ? '' : label
       };
     });
@@ -410,19 +410,20 @@ async function fetchData() {
 
 // ── FULLY BOOKED CHECK ───────────────────────────────────────────
 function checkFullyBooked() {
-  const msg      = document.getElementById('cal-status-msg');
+  const msg = document.getElementById('cal-status-msg');
   const subtitle = document.getElementById('cal-subtitle');
 
   // If month is locked, banner handles the messaging — hide both
   if (lockedMonths.has(viewYear + '-' + String(viewMonth + 1).padStart(2, '0'))) {
-    msg.style.display      = 'none';
-    msg.textContent        = '';
+    msg.style.display = 'none';
+    msg.textContent = '';
     subtitle.style.display = 'none';
     return;
   }
 
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   let hasAvailable = false;
+
   for (let d = 1; d <= daysInMonth; d++) {
     const thisDate = new Date(viewYear, viewMonth, d);
     const key = dateKey(thisDate);
@@ -431,18 +432,26 @@ function checkFullyBooked() {
     const schedEntry = scheduleMap[key];
     const isBooked = bookedKeys.has(key);
     const weekBlocked = isFSS(dow) && bookedWeeks.has(fridayKey(thisDate));
+
+    // A date labelled 'open' is always available (not past, not already booked)
+    if (schedEntry && schedEntry.type === 'open' && !isPast && !isBooked) {
+      hasAvailable = true;
+      break;
+    }
+
     if (isFSS(dow) && !isPast && !schedEntry && !isBooked && !weekBlocked) {
       hasAvailable = true;
       break;
     }
   }
+
   if (!hasAvailable) {
-    msg.textContent        = 'All slots for this month are currently full.';
-    msg.style.display      = 'block';
+    msg.textContent = 'All slots for this month are currently full.';
+    msg.style.display = 'block';
     subtitle.style.display = 'none';
   } else {
-    msg.style.display      = 'none';
-    msg.textContent        = '';
+    msg.style.display = 'none';
+    msg.textContent = '';
     subtitle.style.display = 'block';
   }
 }
@@ -461,7 +470,7 @@ function renderCal() {
     lockedBanner.classList.remove('visible');
   }
 
-  const firstDay    = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7;
+  const firstDay = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
 
   for (let i = 0; i < firstDay; i++) {
@@ -469,15 +478,15 @@ function renderCal() {
   }
 
   for (let d = 1; d <= daysInMonth; d++) {
-    const thisDate    = new Date(viewYear, viewMonth, d);
-    const key         = dateKey(thisDate);
-    const dow         = thisDate.getDay();
-    const isPast      = thisDate < TODAY;
+    const thisDate = new Date(viewYear, viewMonth, d);
+    const key = dateKey(thisDate);
+    const dow = thisDate.getDay();
+    const isPast = thisDate < TODAY;
     const isFriSatSun = isFSS(dow);
-    const schedEntry  = scheduleMap[key];
-    const isBooked    = bookedKeys.has(key);
+    const schedEntry = scheduleMap[key];
+    const isBooked = bookedKeys.has(key);
     const weekBlocked = isFriSatSun && bookedWeeks.has(fridayKey(thisDate));
-    const isSel       = selDate && dateKey(selDate) === key;
+    const isSel = selDate && dateKey(selDate) === key;
 
     const el = document.createElement('div');
     const numSpan = document.createElement('span');
@@ -487,9 +496,20 @@ function renderCal() {
 
     if (isSel) {
       el.className = 'cal-cell selected';
-
     } else if (isLocked) {
       el.className = 'cal-cell inactive';
+
+    // ── NEW: 'open' label — force available, bypassing weekBlocked
+    } else if (schedEntry && schedEntry.type === 'open') {
+      if (isPast || isBooked) {
+        // Past or already booked — show as booked/inactive appropriately
+        el.className = isBooked ? 'cal-cell booked' : 'cal-cell inactive';
+        if (isBooked) el.title = 'Already booked';
+      } else {
+        // Explicitly opened: show as available regardless of weekBlocked
+        el.className = 'cal-cell available';
+        el.onclick = (function(dt) { return function() { pickDate(dt); }; })(thisDate);
+      }
 
     } else if (schedEntry && schedEntry.type === 'event') {
       el.className = 'cal-cell event';
@@ -499,20 +519,15 @@ function renderCal() {
       lbl.className = 'cal-label';
       lbl.textContent = schedEntry.label;
       el.appendChild(lbl);
-
     } else if (schedEntry && schedEntry.type === 'inactive') {
       el.className = 'cal-cell inactive';
-
     } else if (!isFriSatSun || isPast) {
       el.className = 'cal-cell inactive';
-
     } else if (isBooked) {
       el.className = 'cal-cell booked';
       el.title = 'Already booked';
-
     } else if (weekBlocked) {
       el.className = 'cal-cell inactive';
-
     } else {
       el.className = 'cal-cell available';
       el.onclick = (function(dt) { return function() { pickDate(dt); }; })(thisDate);
@@ -531,7 +546,7 @@ function updateNavButtons() {
 function calNav(dir) {
   viewMonth += dir;
   if (viewMonth > 11) { viewMonth = 0; viewYear++; }
-  if (viewMonth < 0)  { viewMonth = 11; viewYear--; }
+  if (viewMonth < 0) { viewMonth = 11; viewYear--; }
   if (viewYear < MIN_YEAR || (viewYear === MIN_YEAR && viewMonth < MIN_MONTH)) { viewMonth = MIN_MONTH; viewYear = MIN_YEAR; }
   if (viewYear > MAX_YEAR || (viewYear === MAX_YEAR && viewMonth > MAX_MONTH)) { viewMonth = MAX_MONTH; viewYear = MAX_YEAR; }
   renderCal();
@@ -584,22 +599,22 @@ async function submitBook() {
   btn.disabled = true;
   btn.textContent = 'Sending…';
 
-  const name        = document.getElementById('f-name').value.trim();
-  const phone       = document.getElementById('f-phone').value.trim();
-  const email       = document.getElementById('f-email').value.trim();
-  const area        = document.getElementById('f-area').value.trim();
-  const notes       = document.getElementById('f-notes').value.trim();
+  const name    = document.getElementById('f-name').value.trim();
+  const phone   = document.getElementById('f-phone').value.trim();
+  const email   = document.getElementById('f-email').value.trim();
+  const area    = document.getElementById('f-area').value.trim();
+  const notes   = document.getElementById('f-notes').value.trim();
   const dateDisplay = fmtDisplay(selDate);
-  const dateSend    = selDate.getFullYear() + '-' +
-                      String(selDate.getMonth()+1).padStart(2,'0') + '-' +
-                      String(selDate.getDate()).padStart(2,'0');
-  const timeStr     = selTime;
+  const dateSend = selDate.getFullYear() + '-' +
+    String(selDate.getMonth()+1).padStart(2,'0') + '-' +
+    String(selDate.getDate()).padStart(2,'0');
+  const timeStr = selTime;
 
   lastBooking = { name, phone, email, area, date: dateSend, dateDisplay, time: timeStr, notes };
 
   let status = 'ok';
   try {
-    const res  = await fetch(SHEET_URL, {
+    const res = await fetch(SHEET_URL, {
       method: 'POST',
       body: JSON.stringify({ action: 'book', ...lastBooking })
     });
