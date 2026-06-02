@@ -293,6 +293,7 @@ let bookedKeys = new Set();
 let bookedWeeks = new Set();
 let scheduleMap = {};
 let lockedMonths = new Set();
+let alternateAnchors = []; // Friday dates that anchor biweekly availability
 let selDate = null;
 let selTime = null;
 let viewYear = MIN_YEAR;
@@ -340,6 +341,58 @@ function fmtDisplay(d) {
 
 function isFSS(dow) { return dow === 5 || dow === 6 || dow === 0; }
 
+// ── ALTERNATE BIWEEKLY HELPER ───────────────────────────────────
+// Returns 'available', 'inactive', or null (= not governed by alternate pattern).
+// Scoped to the anchor's month only, with Sat/Sun spill allowed for the last ON-weekend.
+// Precedence: specific scheduleMap entries (open, event, inactive) always override this.
+function alternateStatus(d) {
+  if (alternateAnchors.length === 0) return null;
+  var dow = d.getDay();
+  if (!isFSS(dow)) return null;
+
+  // Normalise d to its Friday
+  var thisFri = new Date(d);
+  if (dow === 6) thisFri.setDate(d.getDate() - 1);
+  else if (dow === 0) thisFri.setDate(d.getDate() - 2);
+  thisFri.setHours(0,0,0,0);
+
+  for (var i = 0; i < alternateAnchors.length; i++) {
+    var anchor = new Date(alternateAnchors[i]);
+    anchor.setHours(0,0,0,0);
+    var anchorMonth = anchor.getMonth();
+    var anchorYear  = anchor.getFullYear();
+
+    // Difference in days between this Friday and the anchor Friday
+    var diffDays = Math.round((thisFri - anchor) / 86400000);
+    if (diffDays % 7 !== 0) continue; // not a Fri/Sat/Sun in this anchor's grid
+    if (diffDays < 0) continue;       // before the anchor — not governed
+
+    var weeksOffset = diffDays / 7;
+    var isOnWeekend = (weeksOffset % 2 === 0);
+
+    // --- Month-scope check ---
+    // The Friday of this weekend must be in the anchor's month,
+    // OR it's an ON-weekend whose Friday is the last ON-friday of the month
+    // and d itself spills into the next month (Sat/Sun only).
+    var fridayInAnchorMonth = (thisFri.getMonth() === anchorMonth && thisFri.getFullYear() === anchorYear);
+
+    if (!fridayInAnchorMonth) {
+      // Allow Sat/Sun spill: if d is Sat or Sun, check whether its Friday was in anchor month
+      if ((dow === 6 || dow === 0) && isOnWeekend) {
+        // thisFri is already computed; re-check if that Friday was in anchor month
+        if (thisFri.getMonth() === anchorMonth && thisFri.getFullYear() === anchorYear) {
+          return 'available'; // spill from a valid ON-weekend
+        }
+      }
+      continue; // outside anchor month scope
+    }
+
+    if (isOnWeekend) return 'available';
+    else return 'inactive';
+  }
+  return null;
+}
+
 // ── INIT ────────────────────────────────────────────────────────
 function init() {
   renderCal();
@@ -363,6 +416,7 @@ async function fetchData() {
 
     scheduleMap = {};
     lockedMonths = new Set();
+    alternateAnchors = [];
 
     (json.schedule || []).forEach(function(row) {
       var d = toDate(row.date);
@@ -370,17 +424,26 @@ async function fetchData() {
       var label = String(row.label || '').trim();
 
       if (label.toLowerCase() === 'locked') {
-        // Lock the entire month — use YYYY-MM format as key
         var monthKey = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
         lockedMonths.add(monthKey);
-        return; // Do not add to scheduleMap at all
+        return;
       }
 
-      // ── NEW: 'open' label forces this specific date to be available
-      //    even if another day in the same weekend is already booked.
+      // 'open': force this specific date available even if the weekend is partially booked
       if (label.toLowerCase() === 'open') {
         scheduleMap[dateKey(d)] = { type: 'open', label: '' };
         return;
+      }
+
+      // 'alternate': anchor a biweekly pattern from this Friday.
+      // The given weekend + every 2nd weekend after = available; the rest = inactive.
+      if (label.toLowerCase() === 'alternate') {
+        var dow = d.getDay();
+        var anchor = new Date(d);
+        if (dow === 6) anchor.setDate(d.getDate() - 1);      // Saturday -> Friday
+        else if (dow === 0) anchor.setDate(d.getDate() - 2); // Sunday   -> Friday
+        alternateAnchors.push(anchor);
+        return; // Resolved at render/check time, not via scheduleMap
       }
 
       scheduleMap[dateKey(d)] = {
@@ -433,11 +496,19 @@ function checkFullyBooked() {
     const isBooked = bookedKeys.has(key);
     const weekBlocked = isFSS(dow) && bookedWeeks.has(fridayKey(thisDate));
 
-    // A date labelled 'open' is always available (not past, not already booked)
+    // 'open' label: always available if not past/booked
     if (schedEntry && schedEntry.type === 'open' && !isPast && !isBooked) {
       hasAvailable = true;
       break;
     }
+
+    // 'alternate' pattern: only ON-weekends count as available
+    var altStatus = alternateStatus(thisDate);
+    if (altStatus === 'available' && !isPast && !isBooked && !weekBlocked && !schedEntry) {
+      hasAvailable = true;
+      break;
+    }
+    if (altStatus !== null) continue; // alternate governs this date; skip normal check
 
     if (isFSS(dow) && !isPast && !schedEntry && !isBooked && !weekBlocked) {
       hasAvailable = true;
@@ -499,16 +570,34 @@ function renderCal() {
     } else if (isLocked) {
       el.className = 'cal-cell inactive';
 
-    // ── NEW: 'open' label — force available, bypassing weekBlocked
+    // 'open' label — force available, bypassing weekBlocked
     } else if (schedEntry && schedEntry.type === 'open') {
       if (isPast || isBooked) {
-        // Past or already booked — show as booked/inactive appropriately
         el.className = isBooked ? 'cal-cell booked' : 'cal-cell inactive';
         if (isBooked) el.title = 'Already booked';
       } else {
-        // Explicitly opened: show as available regardless of weekBlocked
         el.className = 'cal-cell available';
         el.onclick = (function(dt) { return function() { pickDate(dt); }; })(thisDate);
+      }
+
+    // 'alternate' biweekly pattern — only when no specific scheduleMap entry overrides
+    } else if (alternateStatus(thisDate) !== null && !schedEntry) {
+      var altSt = alternateStatus(thisDate);
+      if (altSt === 'available') {
+        if (isPast) {
+          el.className = 'cal-cell inactive';
+        } else if (isBooked) {
+          el.className = 'cal-cell booked';
+          el.title = 'Already booked';
+        } else if (weekBlocked) {
+          el.className = 'cal-cell inactive';
+        } else {
+          el.className = 'cal-cell available';
+          el.onclick = (function(dt) { return function() { pickDate(dt); }; })(thisDate);
+        }
+      } else {
+        // SKIP weekend — always inactive
+        el.className = 'cal-cell inactive';
       }
 
     } else if (schedEntry && schedEntry.type === 'event') {
