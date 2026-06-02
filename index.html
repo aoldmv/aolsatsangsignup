@@ -441,10 +441,29 @@ async function fetchData() {
         return; // Resolved at render/check time, not via scheduleMap
       }
 
-      scheduleMap[dateKey(d)] = {
-        type: label.toLowerCase() === 'inactive' ? 'inactive' : (label ? 'event' : 'inactive'),
-        label: label.toLowerCase() === 'inactive' ? '' : label
-      };
+      if (label.toLowerCase() === 'inactive') {
+        // Mark the entire Fri/Sat/Sun weekend as inactive, not just the given date.
+        // This way labelling e.g. a Thursday (Jul 31) blocks its whole adjacent weekend.
+        var baseDow = d.getDay();
+        var fri = new Date(d);
+        if (baseDow === 6)      fri.setDate(d.getDate() - 1); // Sat → Fri
+        else if (baseDow === 0) fri.setDate(d.getDate() - 2); // Sun → Fri
+        else if (baseDow !== 5) {
+          // Mon–Thu: advance to the NEXT Friday
+          fri.setDate(d.getDate() + (5 - baseDow));
+        }
+        // Mark Fri, Sat, Sun of that weekend
+        for (var offset = 0; offset <= 2; offset++) {
+          var wkDay = new Date(fri);
+          wkDay.setDate(fri.getDate() + offset);
+          scheduleMap[dateKey(wkDay)] = { type: 'inactive', label: '' };
+        }
+      } else {
+        scheduleMap[dateKey(d)] = {
+          type: label ? 'event' : 'inactive',
+          label: label
+        };
+      }
     });
 
     // Safety pass: remove any locked-month dates that slipped into scheduleMap
@@ -736,7 +755,7 @@ async function submitBook() {
   const sc = document.getElementById('success-card');
   sc.classList.add('visible');
   document.getElementById('success-text').textContent =
-    name + ', your slot on ' + dateDisplay + ' at ' + timeStr + ' is confirmed. Jai Gurudev! 🙏';
+    'Thank you, ' + name + '! We\'ve received your Satsang signup for ' + dateDisplay + ' at ' + timeStr + '. We\'ll be in touch soon with details.';
   sc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
