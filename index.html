@@ -362,33 +362,24 @@ function alternateStatus(d) {
     var anchorMonth = anchor.getMonth();
     var anchorYear  = anchor.getFullYear();
 
-    // Difference in days between this Friday and the anchor Friday
+    // Governed if: the date itself is in the anchor month,
+    // OR it's a Sat/Sun whose Friday fell in the anchor month (end-of-month spill).
+    var dateInAnchorMonth = (d.getMonth() === anchorMonth && d.getFullYear() === anchorYear);
+    var satSunSpill       = (dow === 6 || dow === 0) &&
+                            thisFri.getMonth() === anchorMonth &&
+                            thisFri.getFullYear() === anchorYear;
+
+    if (!dateInAnchorMonth && !satSunSpill) continue; // not governed by this anchor
+
+    // Diff in days from anchor Friday to this weekend's Friday
     var diffDays = Math.round((thisFri - anchor) / 86400000);
-    if (diffDays % 7 !== 0) continue; // not a Fri/Sat/Sun in this anchor's grid
-    if (diffDays < 0) continue;       // before the anchor — not governed
 
+    // Before the anchor → inactive
+    if (diffDays < 0) return 'inactive';
+
+    // On or after anchor: even weeks = ON (available), odd weeks = skip (inactive)
     var weeksOffset = diffDays / 7;
-    var isOnWeekend = (weeksOffset % 2 === 0);
-
-    // --- Month-scope check ---
-    // The Friday of this weekend must be in the anchor's month,
-    // OR it's an ON-weekend whose Friday is the last ON-friday of the month
-    // and d itself spills into the next month (Sat/Sun only).
-    var fridayInAnchorMonth = (thisFri.getMonth() === anchorMonth && thisFri.getFullYear() === anchorYear);
-
-    if (!fridayInAnchorMonth) {
-      // Allow Sat/Sun spill: if d is Sat or Sun, check whether its Friday was in anchor month
-      if ((dow === 6 || dow === 0) && isOnWeekend) {
-        // thisFri is already computed; re-check if that Friday was in anchor month
-        if (thisFri.getMonth() === anchorMonth && thisFri.getFullYear() === anchorYear) {
-          return 'available'; // spill from a valid ON-weekend
-        }
-      }
-      continue; // outside anchor month scope
-    }
-
-    if (isOnWeekend) return 'available';
-    else return 'inactive';
+    return (weeksOffset % 2 === 0) ? 'available' : 'inactive';
   }
   return null;
 }
@@ -438,18 +429,41 @@ async function fetchData() {
       // 'alternate': anchor a biweekly pattern from this Friday.
       // The given weekend + every 2nd weekend after = available; the rest = inactive.
       if (label.toLowerCase() === 'alternate') {
+        // Normalise to the Friday of (or nearest Friday on/after) the given date.
+        // Sat → previous Fri, Sun → previous Fri, Mon–Thu → next Fri, Fri → same.
         var dow = d.getDay();
         var anchor = new Date(d);
-        if (dow === 6) anchor.setDate(d.getDate() - 1);      // Saturday -> Friday
-        else if (dow === 0) anchor.setDate(d.getDate() - 2); // Sunday   -> Friday
+        if      (dow === 6) anchor.setDate(d.getDate() - 1);       // Sat → Fri before
+        else if (dow === 0) anchor.setDate(d.getDate() - 2);       // Sun → Fri before
+        else if (dow !== 5) anchor.setDate(d.getDate() + (5 - dow)); // Mon–Thu → next Fri
+        // dow === 5 (Fri) → stays as-is
         alternateAnchors.push(anchor);
         return; // Resolved at render/check time, not via scheduleMap
       }
 
-      scheduleMap[dateKey(d)] = {
-        type: label.toLowerCase() === 'inactive' ? 'inactive' : (label ? 'event' : 'inactive'),
-        label: label.toLowerCase() === 'inactive' ? '' : label
-      };
+      if (label.toLowerCase() === 'inactive') {
+        // Mark the entire Fri/Sat/Sun weekend as inactive, not just the given date.
+        // This way labelling e.g. a Thursday (Jul 31) blocks its whole adjacent weekend.
+        var baseDow = d.getDay();
+        var fri = new Date(d);
+        if (baseDow === 6)      fri.setDate(d.getDate() - 1); // Sat → Fri
+        else if (baseDow === 0) fri.setDate(d.getDate() - 2); // Sun → Fri
+        else if (baseDow !== 5) {
+          // Mon–Thu: advance to the NEXT Friday
+          fri.setDate(d.getDate() + (5 - baseDow));
+        }
+        // Mark Fri, Sat, Sun of that weekend
+        for (var offset = 0; offset <= 2; offset++) {
+          var wkDay = new Date(fri);
+          wkDay.setDate(fri.getDate() + offset);
+          scheduleMap[dateKey(wkDay)] = { type: 'inactive', label: '' };
+        }
+      } else {
+        scheduleMap[dateKey(d)] = {
+          type: label ? 'event' : 'inactive',
+          label: label
+        };
+      }
     });
 
     // Safety pass: remove any locked-month dates that slipped into scheduleMap
